@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="{% static 'weatherApp/css/weather.css' %}">
+</head>
+<body>
+    <div class="weather-container">
+        <h1>Weather App</h1>
+
+        <!-- Search Form -->
+        <form method="POST">
+            {% csrf_token %}
+            <div class="search-box">
+                <input type="text" name="city" placeholder="Enter City name" value="{{ city }}" required>
+                <button type="submit">
+                    <img src="{% static 'weatherApp/images/search.png' %}" alt="Search">
+                </button>
+            </div>
+        </form>
+
+        <!-- Weather Information -->
+        {% if weather_data %}
+            <div class="weather-info">
+                <h2>Weather in {{ city }}</h2>
+                <div class="weather-details">
+                    <img class="weather-icon" 
+                        src="https://openweathermap.org/img/wn/{{ weather_data.weather.0.icon }}@2x.png" 
+                        alt="{{ weather_data.weather.0.description }}">
+                    <div class="details-text">
+                        <p><strong>Temperature:</strong> {{ weather_data.main.temp }} °C</p>
+                        <p><strong>Humidity:</strong> {{ weather_data.main.humidity }} %</p>
+                        <p><strong>Wind Speed:</strong> {{ weather_data.wind.speed }} m/s</p>
+                        <p><strong>Description:</strong> {{ weather_data.weather.0.description }}</p>
+                    </div>
+                </div>
+            </div>
+        {% elif city %}
+            <p class="error-message">City not found. Please try again.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
